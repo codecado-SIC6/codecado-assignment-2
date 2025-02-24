@@ -26,19 +26,20 @@ def do_connect():
     print('Network config:', sta_if.ifconfig())
 
 
-def send_data_to_ubidots(temperature, humidity, day_night):
+def send_data_to_ubidots(temperature, humidity, light_status, ldr_value):
     url = "http://industrial.api.ubidots.com/api/v1.6/devices/" + DEVICE_ID
     headers = {"Content-Type": "application/json", "X-Auth-Token": TOKEN}
     data = {
         "temp": temperature,
         "humidity": humidity,
-        "day_night": day_night,
+        "light_status": light_status,
+        "ldr_value": ldr_value
     }
     response = requests.post(url, json=data, headers=headers)
     #print("Response:", response.text)
     print("Done Sending Data to Ubidots!")
 
-
+"""
 def check_day_night():
     ldr_value = ldr.read()  # Membaca nilai ADC dari sensor LDR
     print("LDR Value:", ldr_value)
@@ -48,6 +49,13 @@ def check_day_night():
     else:
         led.value(0)  # Matikan LED jika siang
         return "day"
+"""
+def get_light_status():
+    ldr_value = ldr.read()
+    if ldr_value < 2000:  # Threshold untuk menentukan siang/malam
+        return "Night", ldr_value
+    else:
+        return "Day", ldr_value
 
 
 # Connect to WiFi
@@ -58,12 +66,18 @@ while True:
         sensor.measure()  # Membaca parameter dari sensor DHT11
         temperature = sensor.temperature()
         humidity = sensor.humidity()
-        day_night = check_day_night()
+        light_status, ldr_value = get_light_status()  
 
-        print(f"Temperature: {temperature}C, Humidity: {humidity}%, Time: {day_night}")
-        send_data_to_ubidots(temperature, humidity, day_night)
+        # Kontrol LED: Nyalakan saat malam atau suhu > 40°C
+        if light_status == "Night" or temperature > 40:
+            led.value(1)
+        else:
+            led.value(0)
+
+        print(f"Temperature: {temperature}C, Humidity: {humidity}%, Light: {light_status}, LDR: {ldr_value}")
+        send_data_to_ubidots(temperature, humidity, light_status, ldr_value)
         
         time.sleep(1)
     except Exception as e:
-        print("Error:", e)
+        print(e)
 
