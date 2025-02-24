@@ -5,8 +5,8 @@ import ujson
 import utime as time
 import urequests as requests
 
-DEVICE_ID = "diphone"
-TOKEN = "BBUS-BbyzvD0LJnauOGuqp3hmFBTtZOlhAq"
+DEVICE_ID = "codecado"
+TOKEN = "BBUS-BzRZEWnxy555pRBZdfGr6IRcB6U4Bz"
 
 # Inisialisasi sensor dan LED
 led = Pin(5, Pin.OUT)
@@ -42,7 +42,7 @@ def send_data_to_ubidots(temperature, humidity, day_night):
 def check_day_night():
     ldr_value = ldr.read()  # Membaca nilai ADC dari sensor LDR
     print("LDR Value:", ldr_value)
-    if ldr_value < 1000:  # Nilai threshold untuk malam hari (sesuaikan sesuai kondisi)
+    if ldr_value > 1000:  # Nilai threshold untuk malam hari (sesuaikan sesuai kondisi)
         led.value(1)  # Nyalakan LED jika malam
         return "night"
     else:
@@ -66,3 +66,4 @@ while True:
         time.sleep(1)
     except Exception as e:
         print("Error:", e)
+
