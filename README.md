@@ -4,7 +4,7 @@
 ### 1. Dashboard Ubidots  
 
 <p align='center'>
-  <img src="https://github.com/user-attachments/assets/439b2b75-6fa4-4b3a-8603-a28fb42236b1">
+  <img src="https://github.com/user-attachments/assets/fdfb53de-cc1e-4a52-8275-35025d3a6ca3">
   <br>
   <br>
   <a href="https://github.com/user-attachments/assets/46961d03-7406-4ac0-9a94-df1318d73bd2">
